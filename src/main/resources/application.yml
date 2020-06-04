@@ -1,0 +1,50 @@
+configurables:
+  port: 7878
+  context-path: /
+
+  datasource-url: jdbc:h2:mem:~/weatherproxydb
+  datasource-db: weatherproxydb
+  datasource-username: sa
+  datasource-password:
+  datasource-initialization-mode: always
+
+  openweathermap:
+    url: http://api.openweathermap.org/data/2.5/weather
+    api-key:
+    units: metric
+
+spring:
+  application:
+    name: weather-proxy
+  datasource:
+    url: ${configurables.datasource-url}
+    username: ${configurables.datasource-username}
+    password: ${configurables.datasource-password}
+    platform: h2
+    driver-class-name: org.h2.Driver
+    initialization-mode: ${configurables.datasource-initialization-mode}
+  h2:
+    console:
+      enabled: true
+      path: /h2
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    generate-ddl: true
+    hibernate:
+      ddl-auto: create-drop
+    open-in-view: false
+
+server:
+  address: 0.0.0.0
+  port: ${configurables.port}
+  servlet:
+    session:
+      timeout: 43200
+    context-path: ${configurables.context-path}
+  external:
+    proto: http
+    address: 0.0.0.0
+    port: ${configurables.port}
+
+swagger:
+  allowed-paths: "/.*"
