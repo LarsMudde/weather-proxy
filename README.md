@@ -10,7 +10,7 @@ Configuration and settings can be found in the `application.yml` file located in
 
 **Before running the application please make sure a valid OpenWeatherMap API-key is added to the `application.yml` file.**
 If the application is running in a docker container you can set the API-key using the environment variable:  `CONFIGURABLES.OPENWEATHERMAP.API-KEY`.
-For example: `docker run -p 7878:7878 -e CONFIGURABLES.OPENWEATHERMAP.API-KEY=[your API-key] larsm/openweatherproxy:latest`.
+For example: `docker run -p 7878:7878 -e CONFIGURABLES.OPENWEATHERMAP.API-KEY=[your API-key] larsm/weatherproxy:latest`.
 
 -------------------
 # Assignment
