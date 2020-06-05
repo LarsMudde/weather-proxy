@@ -1,16 +1,13 @@
 package nl.showcase.weatherproxy.domain.models;
 
 import lombok.Getter;
+import org.springframework.util.Assert;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
-import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "City")
+@Table(name = "CityWeather")
 @Getter
 public class City implements Serializable {
 
@@ -18,20 +15,25 @@ public class City implements Serializable {
 
     }
 
-    public City(String name, Double minimumTemperature, Double maximumTemperature, LocalDateTime sunrise) {
-        this.name = name;
-        this.minimumTemperature = minimumTemperature;
-        this.maximumTemperature = maximumTemperature;
-        this.sunrise = sunrise;
+    public static City of(String name) {
+        Assert.hasText(name, "name is obligated!");
+
+        City city = new City();
+        city.name = name;
+        return city;
+    }
+
+    public void setWeather(Weather weather) {
+        this.weather = weather;
     }
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @Column(unique=true)
     private String name;
 
-    private Double minimumTemperature;
-    private Double maximumTemperature;
-    private LocalDateTime sunrise;
+    @Embedded
+    private Weather weather;
 }

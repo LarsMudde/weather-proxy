@@ -18,13 +18,13 @@ public class OpenWeatherMapResponseDTO {
 
     @JsonProperty("main")
     private void unpackMain(Map<String, Object> main) {
-        this.minimumTemperature = (double) main.get("temp_min");
-        this.maximumTemperature = (double) main.get("temp_max");
+        this.minimumTemperature = Double.parseDouble(main.get("temp_min").toString());
+        this.maximumTemperature = Double.parseDouble(main.get("temp_max").toString());
     }
 
     @JsonProperty("sys")
     private void unpackSys(Map<String, Object> sys) {
-        this.sunrise = (int) sys.get("sunrise");
+        this.sunrise = Integer.parseInt(sys.get("sunrise").toString());
     }
 
 }
