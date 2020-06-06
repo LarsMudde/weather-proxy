@@ -1,9 +1,16 @@
 package nl.showcase.weatherproxy.infrastructure.interfaces;
 
-import nl.showcase.weatherproxy.AbstractControllerTest;
+import nl.showcase.weatherproxy.application.service.WeatherService;
 import nl.showcase.weatherproxy.domain.models.City;
 import nl.showcase.weatherproxy.domain.models.Weather;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -19,7 +26,15 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.hamcrest.Matchers.is;
 
-public class WeatherProxyControllerTest extends AbstractControllerTest {
+@ExtendWith(MockitoExtension.class)
+@WebMvcTest(value = {WeatherProxyController.class})
+public class WeatherProxyControllerTest {
+
+    @Autowired
+    protected MockMvc mockMvc;
+
+    @MockBean
+    protected WeatherService weatherService;
 
     @Test
     void addCityByNameTest() throws Exception {
@@ -33,12 +48,25 @@ public class WeatherProxyControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    void addCityByNameCityNotFoundTest() throws Exception {
+    void addCityByNameNoAPIKeyTest() throws Exception {
         // Given the name of a city to add
         String cityName = "Rotterdam";
 
         // When addCityByName is called
-        willThrow(NoSuchElementException.class).given(weatherService).addCityByName(cityName);
+        willThrow(HttpClientErrorException.Unauthorized.class).given(weatherService).addCityByName(cityName);
+
+        // When addCityByName is called then reply with 404 not found
+        mockMvc.perform(post("/weatherproxy/cities/" + cityName))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void addCityByNameCityNotFoundInOpenWeatherMapTest() throws Exception {
+        // Given the name of a city to add
+        String cityName = "Rotterdam";
+
+        // When addCityByName is called
+        willThrow(HttpClientErrorException.NotFound.class).given(weatherService).addCityByName(cityName);
 
         // When addCityByName is called then reply with 404 not found
         mockMvc.perform(post("/weatherproxy/cities/" + cityName))

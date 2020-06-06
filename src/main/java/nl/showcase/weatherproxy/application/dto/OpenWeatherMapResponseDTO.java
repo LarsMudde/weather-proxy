@@ -1,15 +1,16 @@
 package nl.showcase.weatherproxy.application.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.util.Map;
 
-@NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
 @Getter
 public class OpenWeatherMapResponseDTO {
+
+    protected OpenWeatherMapResponseDTO() {
+
+    }
 
     private Double minimumTemperature;
     private Double maximumTemperature;

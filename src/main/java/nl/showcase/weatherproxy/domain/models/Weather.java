@@ -32,4 +32,14 @@ public class Weather implements Serializable {
     private Double minimumTemperature;
     private Double maximumTemperature;
     private LocalDateTime sunrise;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Weather)) return false;
+        Weather weather = (Weather) o;
+        return getMinimumTemperature().equals(weather.getMinimumTemperature()) &&
+                getMaximumTemperature().equals(weather.getMaximumTemperature()) &&
+                getSunrise().equals(weather.getSunrise());
+    }
 }
