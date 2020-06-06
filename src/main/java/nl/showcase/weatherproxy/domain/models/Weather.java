@@ -6,6 +6,7 @@ import org.springframework.util.Assert;
 import javax.persistence.Embeddable;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 
 @Embeddable
@@ -41,5 +42,10 @@ public class Weather implements Serializable {
         return getMinimumTemperature().equals(weather.getMinimumTemperature()) &&
                 getMaximumTemperature().equals(weather.getMaximumTemperature()) &&
                 getSunrise().equals(weather.getSunrise());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getMinimumTemperature(), getMaximumTemperature(), getSunrise());
     }
 }

@@ -12,17 +12,17 @@ import java.util.NoSuchElementException;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(HttpClientErrorException.NotFound.class)
-    public final ResponseEntity handleException(HttpClientErrorException.NotFound ex) {
+    public final ResponseEntity<String> handleException(HttpClientErrorException.NotFound ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("City not found in openweathermap api data.");
     }
 
     @ExceptionHandler(HttpClientErrorException.Unauthorized.class)
-    public final ResponseEntity handleException(HttpClientErrorException.Unauthorized ex) {
+    public final ResponseEntity<String> handleException(HttpClientErrorException.Unauthorized ex) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
     }
 
     @ExceptionHandler(NoSuchElementException.class)
-    public final ResponseEntity handleException(NoSuchElementException ex) {
+    public final ResponseEntity<String> handleException(NoSuchElementException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("City not found in weatherproxy database, try adding it using POST: /weatherproxy/cities/{cityName}.");
     }
 }

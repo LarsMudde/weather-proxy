@@ -1,6 +1,7 @@
 package nl.showcase.weatherproxy.application.service;
 
 import nl.showcase.weatherproxy.application.dto.OpenWeatherMapResponseDTO;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -9,6 +10,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.*;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -32,6 +35,25 @@ public class OpenWeatherMapServiceTest {
     @Mock
     ResponseEntity<OpenWeatherMapResponseDTO> mockResponseEntity;
 
+    private String openWeatherMapApiUrl;
+
+    private String apiKey;
+
+    private String units;
+
+    @BeforeEach
+    void testSetup() {
+        openWeatherMapApiUrl = "https://api.openweathermap.org/data/2.5/weather";
+        ReflectionTestUtils.setField(openWeatherMapService, "openWeatherMapApiUrl", openWeatherMapApiUrl);
+
+        apiKey = "abc123def";
+        ReflectionTestUtils.setField(openWeatherMapService, "apiKey", apiKey);
+
+        units = "metric";
+        ReflectionTestUtils.setField(openWeatherMapService, "units", units);
+    }
+
+
     @Test
     void getWeatherForCityTest() {
         // Given the name of a city and an OpenWeatherMapResponseDTO
@@ -40,19 +62,21 @@ public class OpenWeatherMapServiceTest {
         Double maximumTemperature = 44.32;
         LocalDateTime sunrise = LocalDateTime.now().withNano(0);
 
-        OpenWeatherMapResponseDTO weatherResponse = spy(OpenWeatherMapResponseDTO.class);
-        ReflectionTestUtils.setField(weatherResponse, "minimumTemperature", minimumTemperature);
-        ReflectionTestUtils.setField(weatherResponse, "maximumTemperature", maximumTemperature);
-        ReflectionTestUtils.setField(weatherResponse, "sunrise", (int) sunrise.atZone(ZoneId.systemDefault()).toEpochSecond());
-        ReflectionTestUtils.setField(weatherResponse, "name", cityName);
+        OpenWeatherMapResponseDTO expectedResponse = spy(OpenWeatherMapResponseDTO.class);
+        ReflectionTestUtils.setField(expectedResponse, "minimumTemperature", minimumTemperature);
+        ReflectionTestUtils.setField(expectedResponse, "maximumTemperature", maximumTemperature);
+        ReflectionTestUtils.setField(expectedResponse, "sunrise", (int) sunrise.atZone(ZoneId.systemDefault()).toEpochSecond());
+        ReflectionTestUtils.setField(expectedResponse, "name", cityName);
 
-        doReturn(mockResponseEntity).when(restTemplate).exchange(contains(cityName), eq(HttpMethod.GET), any(), eq(OpenWeatherMapResponseDTO.class));
-        doReturn(weatherResponse).when(mockResponseEntity).getBody();
+        String expectedUrl = openWeatherMapApiUrl + "?q=" + cityName + "&appid=" + apiKey + "&units=" + units;
 
-        // When the service is called, (not sure if this can be done with var in Java 8?)
+        doReturn(mockResponseEntity).when(restTemplate).exchange(eq(expectedUrl), eq(HttpMethod.GET), any(), eq(OpenWeatherMapResponseDTO.class));
+        doReturn(expectedResponse).when(mockResponseEntity).getBody();
+
+        // When the service is called
         OpenWeatherMapResponseDTO response = openWeatherMapService.getWeatherForCity(cityName);
 
         // Then verify the response equals the expected DTO
-        assertEquals(weatherResponse, response);
+        assertEquals(expectedResponse, response);
     }
 }

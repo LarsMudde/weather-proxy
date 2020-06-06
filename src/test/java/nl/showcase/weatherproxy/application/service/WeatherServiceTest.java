@@ -112,7 +112,7 @@ public class WeatherServiceTest {
         // When cityrepository is called
         when(cityRepository.findAll()).thenReturn(cities);
 
-        // When the service is called, (not sure if this can be done with var in Java 8?)
+        // When the service is called
         HashSet<City> result = weatherService.getAllCities();
 
         // Then verify if the cityrepository is called and the results are returned
@@ -125,7 +125,7 @@ public class WeatherServiceTest {
     void getAllCitiesNoCitiesTest() {
         // Given nothing
 
-        // When the service is called, (not sure if this can be done with var in Java 8?)
+        // When the service is called
         HashSet<City> result = weatherService.getAllCities();
 
         // Then verify if the cityrepository is called and the result is empty
@@ -145,7 +145,7 @@ public class WeatherServiceTest {
         // When cityrepository is called
         when(cityRepository.findCityByNameIgnoreCase(cityName)).thenReturn(Optional.of(city));
 
-        // When the service is called, (not sure if this can be done with var in Java 8?)
+        // When the service is called
         City result = weatherService.getCityByName(cityName);
 
         // Then

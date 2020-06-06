@@ -9,8 +9,8 @@ configurables:
   datasource-initialization-mode: always
 
   openweathermap:
-    url: http://api.openweathermap.org/data/2.5/weather
-    api-key:
+    url: https://api.openweathermap.org/data/2.5/weather
+    api-key: 
     units: metric
 
 spring:

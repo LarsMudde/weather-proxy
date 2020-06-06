@@ -17,7 +17,7 @@ public class WeatherProxyController {
     public WeatherProxyController(WeatherService weatherService) { this.weatherService = weatherService; }
 
     @PostMapping("/cities/{cityName}")
-    public ResponseEntity addCityByName(@PathVariable String cityName) {
+    public ResponseEntity<HttpStatus> addCityByName(@PathVariable String cityName) {
         weatherService.addCityByName(cityName);
         return ResponseEntity.ok(HttpStatus.NO_CONTENT);
     }
@@ -33,7 +33,7 @@ public class WeatherProxyController {
     }
 
     @DeleteMapping("cities/{cityName}")
-    public ResponseEntity deleteCityByName(@PathVariable String cityName) {
+    public ResponseEntity<HttpStatus> deleteCityByName(@PathVariable String cityName) {
         weatherService.deleteCityByName(cityName);
         return ResponseEntity.ok(HttpStatus.NO_CONTENT);
     }
